@@ -1,0 +1,45 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+model Member {
+  id               String          @id @default(cuid())
+  name             String
+  gender           Gender
+  child            Boolean
+  fellow           Boolean
+  createdAt        DateTime        @default(now()) @map(name: "created_at")
+  updatedAt        DateTime        @updatedAt @map(name: "updated_at")
+  CheckInRecords   CheckInRecords? @relation(fields: [checkInRecordsId], references: [id])
+  checkInRecordsId String?
+
+  @@map(name: "members")
+}
+
+enum TimePeriod {
+  AM
+  PM
+  NOON
+}
+
+model CheckInRecords {
+  id        String     @id @default(cuid())
+  title     String
+  period    TimePeriod
+  members   Member[]
+  createdAt DateTime   @default(now()) @map(name: "created_at")
+  updatedAt DateTime   @updatedAt @map(name: "updated_at")
+}
