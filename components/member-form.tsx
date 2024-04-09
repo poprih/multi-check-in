@@ -16,7 +16,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Gender } from "@prisma/client";
+import { Gender, Member } from "@prisma/client";
 import { Switch } from "./ui/switch";
 
 const formSchema = z.object({
@@ -27,18 +27,21 @@ const formSchema = z.object({
     required_error: "You need to select a notification type.",
   }),
   fellow: z.boolean(),
+  birthday: z.string().length(10, { message: "Please enter a valid date." }),
 });
 export type MemberFormValues = z.infer<typeof formSchema>;
 interface MemberFormProps {
+  initialMember?: Member;
   onSubmit: (values: MemberFormValues) => void;
 }
-const MemberForm: React.FC<MemberFormProps> = ({ onSubmit }) => {
+const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
   const form = useForm<MemberFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "usd",
+      name: "",
       gender: Gender.Male,
       fellow: true,
+      ...initialMember,
     },
   });
   return (
@@ -55,7 +58,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit }) => {
             <FormItem>
               <FormLabel>姓名</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,6 +86,19 @@ const MemberForm: React.FC<MemberFormProps> = ({ onSubmit }) => {
                   </div>
                 </RadioGroup>
               </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="birthday"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>生日</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="1991-10-08" />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

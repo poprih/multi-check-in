@@ -16,17 +16,14 @@ enum Gender {
 }
 
 model Member {
-  id               String          @id @default(cuid())
-  name             String
-  gender           Gender
-  child            Boolean
-  fellow           Boolean
-  createdAt        DateTime        @default(now()) @map(name: "created_at")
-  updatedAt        DateTime        @updatedAt @map(name: "updated_at")
-  CheckInRecords   CheckInRecords? @relation(fields: [checkInRecordsId], references: [id])
-  checkInRecordsId String?
-
-  @@map(name: "members")
+  id        String   @id @default(cuid())
+  name      String
+  gender    Gender
+  birthday  String
+  fellow    Boolean
+  records   String[] @map(name: "record_ids")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
 }
 
 enum TimePeriod {
@@ -35,11 +32,11 @@ enum TimePeriod {
   NOON
 }
 
-model CheckInRecords {
+model CheckInRecord {
   id        String     @id @default(cuid())
-  title     String
+  title     String     @unique
   period    TimePeriod
-  members   Member[]
+  members   String[]   @map(name: "member_ids")
   createdAt DateTime   @default(now()) @map(name: "created_at")
   updatedAt DateTime   @updatedAt @map(name: "updated_at")
 }
