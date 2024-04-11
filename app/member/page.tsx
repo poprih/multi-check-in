@@ -140,7 +140,6 @@ const MemberPage = () => {
           </DialogContent>
         </Dialog>
       </div>
-
       {loading ? (
         <div className="flex justify-center">
           <Loader className="animate-spin-slow" />

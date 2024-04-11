@@ -14,9 +14,11 @@ import BasicTable from "@/components/basic-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Loader } from "lucide-react";
 
 export default function CheckInRecords() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const handleCreate = async (period: TimePeriod) => {
     const title = `${getters.lastestSunday} ${period}`;
     let [record] = await fetch(`/api/records?title=${title}`).then((res) =>
@@ -40,6 +42,7 @@ export default function CheckInRecords() {
       .then((res) => res.json())
       .then((data) => {
         setRecords(data);
+        setLoading(false);
       });
   }, []);
   const columns: ColumnDef<CheckInRecord>[] = [
@@ -54,6 +57,18 @@ export default function CheckInRecords() {
     {
       accessorKey: "period",
       header: "時間段",
+    },
+    {
+      accessorKey: "total",
+      header: "總人數",
+    },
+    {
+      accessorKey: "maleTotal",
+      header: "弟兄人數",
+    },
+    {
+      accessorKey: "femaleTotal",
+      header: "姊妹人數",
     },
     {
       accessorKey: "action",
@@ -98,7 +113,13 @@ export default function CheckInRecords() {
           </DialogContent>
         </Dialog>
       </div>
-      <BasicTable columns={columns} data={records} />
+      {loading ? (
+        <div className="flex justify-center">
+          <Loader className="animate-spin-slow" />
+        </div>
+      ) : (
+        <BasicTable columns={columns} data={records} />
+      )}
     </div>
   );
 }
