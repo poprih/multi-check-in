@@ -18,6 +18,7 @@ enum Gender {
 model Member {
   id        String          @id @default(cuid())
   name      String
+  alphabet  String          @default("")
   gender    Gender
   birthday  String
   fellow    Boolean

@@ -17,6 +17,7 @@ import BasicTable from "@/components/basic-table";
 import { ColumnDef } from "@tanstack/react-table";
 import LoaderButton from "@/components/loader-button";
 import { Loader } from "lucide-react";
+import Link from "next/link";
 
 const MemberPage = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -35,24 +36,30 @@ const MemberPage = () => {
       },
     })
       .then(() => setCreateVisible(false))
+      .then(() => fetchMembers())
       .finally(() => setCreateLoading(false));
   };
-  const handleUpdate = (id: string, values: MemberFormValues) => {
+  const [updateMember, setUpdateMember] = useState<Member | null>(null);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const handleUpdate = (values: MemberFormValues) => {
+    setUpdateLoading(true);
     fetch("/api/member", {
       method: "PATCH",
       body: JSON.stringify({
-        id,
+        id: updateMember?.id,
         ...values,
       }),
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => {
-      console.log(res, "====res");
-    });
+    })
+      .then(() => setUpdateMember(null))
+      .then(() => fetchMembers())
+      .finally(() => setUpdateLoading(false));
   };
-  useEffect(() => {
-    fetch("/api/member", {
+  const fetchMembers = () => {
+    setLoading(true);
+    return fetch("/api/member", {
       method: "GET",
     })
       .then((res) => res.json())
@@ -60,6 +67,9 @@ const MemberPage = () => {
         setMembers(data);
         setLoading(false);
       });
+  };
+  useEffect(() => {
+    fetchMembers();
   }, []);
   const columns: ColumnDef<Member>[] = [
     {
@@ -69,6 +79,10 @@ const MemberPage = () => {
     {
       accessorKey: "name",
       header: "姓名",
+    },
+    {
+      accessorKey: "alphabet",
+      header: "字母名",
     },
     {
       accessorKey: "gender",
@@ -93,34 +107,38 @@ const MemberPage = () => {
       header: "操作",
       cell: ({ row }) => {
         return (
-          <>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>修改</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>信息修改</DialogTitle>
-                </DialogHeader>
-                <MemberForm
-                  onSubmit={(values) => handleUpdate(row.original.id, values)}
-                  initialMember={row.original}
-                />
-                <DialogFooter>
-                  <Button type="submit" form="member">
-                    確定
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </>
+          <Button onClick={() => setUpdateMember(row.original)}>修改</Button>
         );
       },
     },
   ];
   return (
     <div className="p-4">
-      <h1>成员</h1>
+      <div className="flex gap-4 items-center">
+        <h1>成员</h1>
+        <Button asChild>
+          <Link href="records">簽到</Link>
+        </Button>
+      </div>
+      <Dialog
+        open={!!updateMember?.id}
+        onOpenChange={() => setUpdateMember(null)}
+      >
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>信息修改</DialogTitle>
+          </DialogHeader>
+          <MemberForm
+            onSubmit={handleUpdate}
+            initialMember={updateMember as Member}
+          />
+          <DialogFooter>
+            <LoaderButton type="submit" form="member" loading={updateLoading}>
+              確定
+            </LoaderButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <div className="flex justify-end my-4">
         <Button onClick={() => setCreateVisible(true)}>新增成员</Button>
         <Dialog

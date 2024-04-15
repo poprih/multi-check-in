@@ -20,12 +20,9 @@ import { Gender, Member } from "@prisma/client";
 import { Switch } from "./ui/switch";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  gender: z.enum([Gender.Female, Gender.Male], {
-    required_error: "You need to select a notification type.",
-  }),
+  name: z.string(),
+  alphabet: z.string(),
+  gender: z.enum([Gender.Female, Gender.Male]),
   fellow: z.boolean(),
   birthday: z.string().length(10, { message: "Please enter a valid date." }),
 });
@@ -39,8 +36,9 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      alphabet: "",
       gender: Gender.Male,
-      fellow: true,
+      fellow: false,
       ...initialMember,
     },
   });
@@ -57,6 +55,19 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>姓名</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="alphabet"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>字母名</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -106,9 +117,9 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
           control={form.control}
           name="fellow"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>同工</FormLabel>
-              <FormControl>
+            <FormItem className="flex items-center">
+              <FormLabel className="mt-2">同工</FormLabel>
+              <FormControl className="m-0">
                 <Switch
                   className="ml-2"
                   onCheckedChange={field.onChange}

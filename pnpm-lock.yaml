@@ -53,6 +53,9 @@ dependencies:
   next:
     specifier: 14.1.4
     version: 14.1.4(react-dom@18.2.0)(react@18.2.0)
+  pinyin-pro:
+    specifier: ^3.20.0
+    version: 3.20.0
   react:
     specifier: ^18
     version: 18.2.0
@@ -2938,6 +2941,10 @@ packages:
   /pify@2.3.0:
     resolution: {integrity: sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==}
     engines: {node: '>=0.10.0'}
+
+  /pinyin-pro@3.20.0:
+    resolution: {integrity: sha512-ASK91P7az8cmKxyfENEpYui6TmxKz3dJqsq+ZeZlF49q41m92H6bRKH1RAEaZKSr/csg3zDVa3q9wQeSEEn9Sw==}
+    dev: false
 
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
