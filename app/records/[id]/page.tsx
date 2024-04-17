@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useImmer } from "use-immer";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -52,8 +52,9 @@ export default function Record() {
       },
     }).then(() => setSubmitting(false));
   };
+  const anchors = Object.keys(categoryMembers);
   return (
-    <div className="p-4">
+    <div className="p-8">
       <div className="flex justify-between  items-center">
         <div className="flex gap-2 items-center">
           <h1>{record?.title}</h1>
@@ -61,9 +62,22 @@ export default function Record() {
             <Link href="/records">返回</Link>
           </Button>
         </div>
+      </div>
+      <div className="fixed top-24 right-4 flex flex-col gap-2">
         <LoaderButton onClick={handleCheckIn} loading={submitting}>
-          提交
+          保存
         </LoaderButton>
+        <ul className="flex flex-col gap-2 text-2xl text-center">
+          {anchors.map((anchor) => {
+            return (
+              <li key={anchor}>
+                <Link href={`#${anchor}`} scroll>
+                  {anchor}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
       {loading ? (
         <div className="flex justify-center">
@@ -73,8 +87,13 @@ export default function Record() {
         <div>
           {Object.entries(categoryMembers || {}).map(([alphabet, members]) => {
             return (
-              <div key={alphabet} className="my-4">
-                <div className="py-2">{alphabet}</div>
+              <div key={alphabet} className="h-96" id={alphabet}>
+                <Link
+                  className="p-2 my-2 block bg-gray-400"
+                  href={`#${alphabet}`}
+                >
+                  {alphabet}
+                </Link>
                 <div className="flex gap-4">
                   {members.map((member) => {
                     return (
