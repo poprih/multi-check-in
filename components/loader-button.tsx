@@ -10,7 +10,11 @@ export default function LoaderButton({
   ...rest
 }: LoaderButtonProps) {
   return (
-    <Button {...rest} className="flex gap-1" disabled={loading}>
+    <Button
+      {...rest}
+      className="flex gap-1"
+      disabled={rest.disabled || loading}
+    >
       {loading && <Loader className="animate-spin-slow" size={16} />}
       {children}
     </Button>

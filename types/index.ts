@@ -15,4 +15,5 @@ export type CheckInRecordSelect = Prisma.CheckInRecordSelect;
 export type CategoryMembers = Record<string, CheckedMember[]>;
 export type CheckInRecordWithCategaryMembers = CheckInRecord & {
   categoryMembers: CategoryMembers;
+  archived: boolean;
 };

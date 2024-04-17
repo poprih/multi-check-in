@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { isAfter } from "date-fns";
 export async function GET(
   _request: Request,
   { params }: { params: { id: string } }
@@ -20,6 +21,7 @@ export async function GET(
       },
       select: {
         title: true,
+        date: true,
         period: true,
         total: true,
         maleTotal: true,
@@ -46,8 +48,12 @@ export async function GET(
     acc[firstAlphabet].push(member);
     return acc;
   }, {} as Record<string, typeof members>);
+  const archived = !!(
+    record?.date && isAfter(new Date(), new Date(record.date))
+  );
   return Response.json({
     ...record,
+    archived,
     categoryMembers,
   });
 }

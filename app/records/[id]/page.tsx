@@ -18,6 +18,7 @@ export default function Record() {
   const params = useParams();
   const [loading, setLoading] = useState(true);
   const [record, setRecord] = useState<CheckInRecord>();
+  const [archived, setArchived] = useState(true);
   const [categoryMembers, updateCategoryMembers] = useImmer<CategoryMembers>(
     {}
   );
@@ -28,7 +29,8 @@ export default function Record() {
     })
       .then((res) => res.json())
       .then((record: CheckInRecordWithCategaryMembers) => {
-        const { categoryMembers, ...rest } = record;
+        const { categoryMembers, archived, ...rest } = record;
+        setArchived(archived);
         setRecord(rest);
         updateCategoryMembers(categoryMembers);
       })
@@ -64,7 +66,11 @@ export default function Record() {
         </div>
       </div>
       <div className="fixed top-24 right-4 flex flex-col gap-2">
-        <LoaderButton onClick={handleCheckIn} loading={submitting}>
+        <LoaderButton
+          onClick={handleCheckIn}
+          loading={submitting}
+          disabled={archived}
+        >
           保存
         </LoaderButton>
         <ul className="flex flex-col gap-2 text-2xl text-center">
@@ -99,6 +105,7 @@ export default function Record() {
                     return (
                       <div key={member.id} className="flex items-center gap-2">
                         <Checkbox
+                          disabled={archived}
                           id={member.id}
                           checked={member.checked}
                           onCheckedChange={(checked) => {

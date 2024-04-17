@@ -8,31 +8,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CheckInRecord, TimePeriod } from "@prisma/client";
-import { getters } from "@/utils";
 import { useRouter } from "next/navigation";
 import BasicTable from "@/components/basic-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Loader } from "lucide-react";
+import { PERIOD_DESCRIPTION } from "@/const";
 
 export default function CheckInRecords() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const handleCreate = async (period: TimePeriod) => {
-    const title = `${getters.lastestSunday} ${period}`;
-    let [record] = await fetch(`/api/records?title=${title}`).then((res) =>
-      res.json()
-    );
-    if (!record?.id) {
-      record = await fetch("/api/records", {
-        method: "POST",
-        body: JSON.stringify({ title, period }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json());
-    }
+    const record = await fetch("/api/records", {
+      method: "POST",
+      body: JSON.stringify({ period }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json());
     router.push(`/records/${record.id}`);
     return;
   };
@@ -55,10 +49,6 @@ export default function CheckInRecords() {
       header: "標題",
     },
     {
-      accessorKey: "period",
-      header: "時間段",
-    },
-    {
       accessorKey: "total",
       header: "總人數",
     },
@@ -79,7 +69,6 @@ export default function CheckInRecords() {
             <Button asChild>
               <Link href={`/records/${row.getValue("id")}`}>查看</Link>
             </Button>
-            <Button>刪除</Button>
           </div>
         );
       },
@@ -105,7 +94,7 @@ export default function CheckInRecords() {
                     variant="outline"
                     onClick={() => handleCreate(period)}
                   >
-                    {period}
+                    {PERIOD_DESCRIPTION[period]}
                   </Button>
                 );
               })}

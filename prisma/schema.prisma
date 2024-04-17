@@ -29,13 +29,14 @@ model Member {
 
 enum TimePeriod {
   AM
-  PM
   NOON
+  PM
 }
 
 model CheckInRecord {
   id          String     @id @default(cuid())
   title       String     @unique
+  date        String     @default("")
   period      TimePeriod
   members     Member[]
   total       Int        @default(0)

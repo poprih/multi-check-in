@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
-import { CheckInRecordSelect } from "@/types";
-import { Gender } from "@prisma/client";
-import { NextRequest } from "next/server";
+import { Gender, TimePeriod } from "@prisma/client";
+import { getters } from "@/utils";
+import { PERIOD_DESCRIPTION } from "@/const";
 export async function PATCH(request: Request) {
   const { id, memberIds }: { id: string; memberIds: string[] } =
     await request.json();
@@ -37,40 +37,43 @@ export async function PATCH(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const data = await request.json();
-  const record = await prisma.checkInRecord.create({
-    data,
+  const { period }: { period: TimePeriod } = await request.json();
+  const date = getters.lastestSunday;
+  const title = `${date} ${PERIOD_DESCRIPTION[period]}`;
+  let record = await prisma.checkInRecord.findUnique({
+    where: {
+      title,
+    },
+    select: {
+      id: true,
+    },
   });
+  if (!record?.id) {
+    record = await prisma.checkInRecord.create({
+      data: {
+        title,
+        date,
+        period,
+      },
+    });
+  }
   return Response.json({ id: record.id });
 }
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id") || undefined;
-  const title = searchParams.get("title") || undefined;
-  const select: CheckInRecordSelect = {
-    id: true,
-    title: true,
-    period: true,
-    total: true,
-    maleTotal: true,
-    femaleTotal: true,
-  };
-  if (id || title) {
-    select.members = {
-      select: {
-        id: true,
-        name: true,
-      },
-    };
-  }
+export async function GET(request: Request) {
   try {
     const records = await prisma.checkInRecord.findMany({
-      where: {
-        id,
-        title,
+      select: {
+        id: true,
+        title: true,
+        period: true,
+        total: true,
+        maleTotal: true,
+        femaleTotal: true,
       },
-      select,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return Response.json(records || []);
   } catch (error) {
