@@ -18,6 +18,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import LoaderButton from "@/components/loader-button";
 import { Loader } from "lucide-react";
 import Link from "next/link";
+import { format } from "date-fns";
 
 const MemberPage = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -94,6 +95,13 @@ const MemberPage = () => {
     {
       accessorKey: "birthday",
       header: "生日",
+    },
+    {
+      accessorKey: "createdAt",
+      header: "創建日期",
+      accessorFn: ({ createdAt }) => {
+        return format(new Date(createdAt), "yyyy-MM-dd");
+      },
     },
     {
       accessorKey: "fellow",

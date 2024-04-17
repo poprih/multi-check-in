@@ -9,6 +9,10 @@ export async function GET() {
       fellow: true,
       birthday: true,
       gender: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
   return Response.json(members);
