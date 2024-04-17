@@ -21,7 +21,7 @@ model Member {
   alphabet  String          @default("")
   gender    Gender
   birthday  String
-  fellow    Boolean
+  servant   Boolean         @default(false)
   records   CheckInRecord[]
   createdAt DateTime        @default(now()) @map(name: "created_at")
   updatedAt DateTime        @updatedAt @map(name: "updated_at")

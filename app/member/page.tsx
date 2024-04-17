@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import MemberForm from "@/components/member-form";
 import type { MemberFormValues } from "@/components/member-form";
@@ -104,10 +102,10 @@ const MemberPage = () => {
       },
     },
     {
-      accessorKey: "fellow",
+      accessorKey: "servant",
       header: "同工",
-      accessorFn: ({ fellow }) => {
-        return fellow ? "是" : "否";
+      accessorFn: ({ servant }) => {
+        return servant ? "是" : "否";
       },
     },
     {
@@ -123,7 +121,7 @@ const MemberPage = () => {
   return (
     <div className="p-4">
       <div className="flex gap-4 items-center">
-        <h1>成员</h1>
+        <h1>教會成員</h1>
         <Button asChild>
           <Link href="records">簽到</Link>
         </Button>

@@ -76,7 +76,12 @@ export default function CheckInRecords() {
   ];
   return (
     <div className="p-4">
-      <h1>Check In Records</h1>
+      <div className="flex gap-4 items-center">
+        <h1>簽到</h1>
+        <Button asChild>
+          <Link href="member">教會成員</Link>
+        </Button>
+      </div>
       <div className="flex justify-end mb-2">
         <Dialog>
           <DialogTrigger asChild>

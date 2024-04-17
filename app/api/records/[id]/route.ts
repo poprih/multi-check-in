@@ -31,7 +31,7 @@ export async function GET(
         id: true,
         name: true,
         alphabet: true,
-        fellow: true,
+        servant: true,
         birthday: true,
         gender: true,
       },
@@ -52,11 +52,11 @@ export async function GET(
         };
       })
       .reduce((acc, member) => {
-        const firstAlphabet = member.alphabet[0];
-        if (!acc[firstAlphabet]) {
-          acc[firstAlphabet] = [];
+        const key = member.servant ? "servant" : member.alphabet[0];
+        if (!acc[key]) {
+          acc[key] = [];
         }
-        acc[firstAlphabet].push(member);
+        acc[key].push(member);
         return acc;
       }, {} as Record<string, typeof members>);
     const archived = !!(

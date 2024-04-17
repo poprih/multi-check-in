@@ -7,7 +7,7 @@ export default function Home() {
       <h1>Multi Check In</h1>
       <div className="flex gap-2">
         <Button asChild>
-          <Link href="/member">全體成員</Link>
+          <Link href="/member">教會成員</Link>
         </Button>
         <Button asChild>
           <Link href="/records">簽到表</Link>

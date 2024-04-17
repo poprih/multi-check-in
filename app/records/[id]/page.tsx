@@ -78,7 +78,7 @@ export default function Record() {
             return (
               <li key={anchor}>
                 <Link href={`#${anchor}`} scroll>
-                  {anchor}
+                  {anchor === "servant" ? "同工" : anchor.toUpperCase()}
                 </Link>
               </li>
             );
@@ -91,14 +91,14 @@ export default function Record() {
         </div>
       ) : (
         <div>
-          {Object.entries(categoryMembers || {}).map(([alphabet, members]) => {
+          {Object.entries(categoryMembers || {}).map(([category, members]) => {
             return (
-              <div key={alphabet} className="h-96" id={alphabet}>
+              <div key={category} className="h-96" id={category}>
                 <Link
                   className="p-2 my-2 block bg-gray-400"
-                  href={`#${alphabet}`}
+                  href={`#${category}`}
                 >
-                  {alphabet}
+                  {category === "servant" ? "同工" : category.toUpperCase()}
                 </Link>
                 <div className="flex gap-4">
                   {members.map((member) => {
@@ -109,8 +109,8 @@ export default function Record() {
                           id={member.id}
                           checked={member.checked}
                           onCheckedChange={(checked) => {
-                            updateCategoryMembers((category) => {
-                              const target = category[alphabet].find(
+                            updateCategoryMembers((categoryMember) => {
+                              const target = categoryMember[category].find(
                                 (_) => _.id === member.id
                               ) as CheckedMember;
                               target.checked = !!checked;

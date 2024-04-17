@@ -23,7 +23,7 @@ const formSchema = z.object({
   name: z.string(),
   alphabet: z.string(),
   gender: z.enum([Gender.Female, Gender.Male]),
-  fellow: z.boolean(),
+  servant: z.boolean(),
   birthday: z.string().length(10, { message: "Please enter a valid date." }),
 });
 export type MemberFormValues = z.infer<typeof formSchema>;
@@ -38,7 +38,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
       name: "",
       alphabet: "",
       gender: Gender.Male,
-      fellow: false,
+      servant: false,
       ...initialMember,
     },
   });
@@ -115,7 +115,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialMember, onSubmit }) => {
         />
         <FormField
           control={form.control}
-          name="fellow"
+          name="servant"
           render={({ field }) => (
             <FormItem className="flex items-center">
               <FormLabel className="mt-2">同工</FormLabel>
